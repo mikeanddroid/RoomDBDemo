@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RoomDbDemo</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="price_format">$%1$s</string>
+    <string name="name_format">Product %1$s</string>
+
+</resources>
