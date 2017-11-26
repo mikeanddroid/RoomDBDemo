@@ -12,6 +12,16 @@ public class ColorModel {
     public int G;
     public int B;
 
+    public float _R;
+    public float _G;
+    public float _B;
+
+    public ColorModel(float _R, float _G, float _B) {
+        this._R = _R;
+        this._G = _G;
+        this._B = _B;
+    }
+
     public ColorModel(int r, int g, int b) {
         R = r;
         G = g;
@@ -22,6 +32,30 @@ public class ColorModel {
         R = 0;
         G = 0;
         B = 0;
+    }
+
+    public float get_R() {
+        return _R;
+    }
+
+    public void set_R(float _R) {
+        this._R = _R;
+    }
+
+    public float get_G() {
+        return _G;
+    }
+
+    public void set_G(float _G) {
+        this._G = _G;
+    }
+
+    public float get_B() {
+        return _B;
+    }
+
+    public void set_B(float _B) {
+        this._B = _B;
     }
 
     public int getR() {

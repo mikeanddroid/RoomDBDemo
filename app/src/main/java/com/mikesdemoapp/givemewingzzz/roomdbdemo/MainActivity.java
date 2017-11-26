@@ -22,14 +22,17 @@ import android.widget.Toast;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.CardAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsShadesTask;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsTask;
+import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsUtils;
+import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.DialogRecyclerViewAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.FileLog;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.RecyclerViewAdapter;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements ColorsTask.ColorsResult, RecyclerViewAdapter.ItemListener, ColorsShadesTask.ColorsShadesResult {
+public class MainActivity extends AppCompatActivity implements ColorsTask.ColorsResult, RecyclerViewAdapter.ItemListener, ColorsShadesTask.ColorsShadesResult, DialogRecyclerViewAdapter.DialogItemListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -124,12 +127,12 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         colorsAdapter = new RecyclerViewAdapter(MainActivity.this, colorsList, this);
         colorRecyclerView.setAdapter(colorsAdapter);
 
-        setAdapterLayoutManager();
+        setColorsAdapterLayoutManager();
         progressDialog.dismiss();
 
     }
 
-    private void setAdapterLayoutManager() {
+    private void setColorsAdapterLayoutManager() {
 
         GridLayoutManager manager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
         colorRecyclerView.setLayoutManager(manager);
@@ -255,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         fileLog.d(TAG, "Colors Shades Size In Main --> " + colorShadesList.size());
 
         CardAdapter cardAdapter = new CardAdapter(this, colorShadesList);
+        DialogRecyclerViewAdapter dialogRecyclerViewAdapter = new DialogRecyclerViewAdapter(this, colorShadesList, this);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
@@ -267,25 +271,91 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         final TextView titleView = (TextView) customTitleView.findViewById(R.id.stackShadeTitleTextView);
 
+        final TextView colorValue1 = (TextView) view.findViewById(R.id.textView);
+        final TextView colorValue2 = (TextView) view.findViewById(R.id.textView1);
+        final TextView colorValue3 = (TextView) view.findViewById(R.id.textView2);
+        final TextView colorValue4 = (TextView) view.findViewById(R.id.textView3);
+        final TextView colorValue5 = (TextView) view.findViewById(R.id.textView4);
+        final TextView colorValue6 = (TextView) view.findViewById(R.id.textView5);
+
+        List<TextView> textViews = new ArrayList<>();
+        textViews.add(colorValue1);
+        textViews.add(colorValue2);
+        textViews.add(colorValue3);
+        textViews.add(colorValue4);
+        textViews.add(colorValue5);
+        textViews.add(colorValue6);
+
+        int defColor = colorShadesList.get(3);
+
+        colorValue1.setText("" + colorShadesList.get(0));
+        colorValue2.setText("" + colorShadesList.get(1));
+
+        if (colorShadesList.get(2) != null) {
+            colorValue3.setText("" + colorShadesList.get(2));
+        }
+
+        if (colorShadesList.get(3) != null) {
+            colorValue4.setText("" + colorShadesList.get(3));
+        }
+
+        if (colorShadesList.get(4) != null) {
+            colorValue5.setText("" + colorShadesList.get(4));
+        }
+
+        if (colorShadesList.get(5) != null) {
+            colorValue6.setText("" + colorShadesList.get(5));
+        }
+
+        colorValue1.setTextColor(defColor);
+        colorValue2.setTextColor(defColor);
+        colorValue3.setTextColor(defColor);
+        colorValue4.setTextColor(defColor);
+        colorValue5.setTextColor(defColor);
+        colorValue6.setTextColor(defColor);
+
+        ColorsUtils colorsUtils = new ColorsUtils();
+        colorsUtils.fadeViews(textViews);
+
+        final TextView shadesHeaderView = (TextView) view.findViewById(R.id.shadesHeader);
+
         titleView.setText("Color Details");
         titleView.setTextColor(colorShadesList.get(2));
+
+        shadesHeaderView.setText("COLOR SHADES - " + colorShadesList.size());
+        shadesHeaderView.setTextColor(colorShadesList.get(2));
 
         // For stack view
 
         StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
+//        RecyclerView dialogShadesView = (RecyclerView) view.findViewById(R.id.dialogRecyclerView);
+
+//        Bitmap bitmap = ColorsUtils.getRoundedCornerBitmap();
+
+        CircularImageView imageButton = view.findViewById(R.id.imageButtonMain);
+        imageButton.setBackgroundColor(colorShadesList.get(0));
+        CircularImageView imageButton1 = view.findViewById(R.id.imageButton1);
+        imageButton1.setBackgroundColor(colorShadesList.get(1));
+        CircularImageView imageButton2 = view.findViewById(R.id.imageButton2);
+        imageButton2.setBackgroundColor(colorShadesList.get(2));
+        CircularImageView imageButton3 = view.findViewById(R.id.imageButton3);
+        imageButton3.setBackgroundColor(colorShadesList.get(3));
+        CircularImageView imageButton4 = view.findViewById(R.id.imageButton4);
+        imageButton4.setBackgroundColor(colorShadesList.get(4));
+        CircularImageView imageButton5 = view.findViewById(R.id.imageButton5);
+        imageButton5.setBackgroundColor(colorShadesList.get(5));
+
+        List<CircularImageView> imageButtons = new ArrayList<>();
+        imageButtons.add(imageButton);
+        imageButtons.add(imageButton1);
+        imageButtons.add(imageButton2);
+        imageButtons.add(imageButton3);
+        imageButtons.add(imageButton4);
+        imageButtons.add(imageButton5);
+
+        colorsUtils.scaleImageViews(imageButtons, 0, 1);
+
         stackView.setAdapter(cardAdapter);
-
-//        alertDialog.setTitle("Color Details");
-
-        StringBuilder colorsList = new StringBuilder();
-
-        for (Integer color : colorShadesList) {
-
-            colorsList.append(" ' " + color + " ' ");
-
-        }
-
-        alertDialog.setMessage("Color Shades " + colorsList.toString());
 
         alertDialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
             @Override
