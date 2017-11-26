@@ -28,6 +28,7 @@ public class CardAdapter extends BaseAdapter {
     LayoutInflater inflater;
     ViewHolder holder = null;
     FileLog fileLog;
+    ColorsUtils colorsUtils;
     private static final String TAG = CardAdapter.class.getSimpleName();
 
     public CardAdapter(Context context, List<Integer> colorShadeList) {
@@ -35,6 +36,7 @@ public class CardAdapter extends BaseAdapter {
         this.colorShadeList = colorShadeList;
         this.inflater = LayoutInflater.from(context);
         fileLog = RoomDbDemoApp.get().getFileLog();
+        colorsUtils = new ColorsUtils();
     }
 
     @Override
@@ -72,9 +74,11 @@ public class CardAdapter extends BaseAdapter {
 
         fileLog.d(TAG, " getView : " + " colorValue = " + colorValue);
 
+        ColorModel rgb = colorsUtils.getRGBFromHex(Long.valueOf(String.valueOf(colorValue)));
+
         holder.cardValue.setTextColor(colorValueNext);
         holder.cardValue.setText("COLOR VALUE");
-        holder.cardColorValue.setText("" + colorValue);
+        holder.cardColorValue.setText("" + colorValue + "\n\nR [ " + rgb.getR() + " ] " + "\nG [ " + rgb.getG() + " ] " + "\nB [ " + rgb.getB() + " ] ");
         holder.cardImage.setBackgroundColor(colorValue);
 
         return view;
