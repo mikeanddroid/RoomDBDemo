@@ -443,7 +443,7 @@ public class ColorsTask extends AsyncTask<Object, Object, Map<Long, Integer>> {
 
     private Map<Long, Integer> getRandomColorsMap() {
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 1000; i++) {
 
             int randomColor = buildRandomColor();
 
