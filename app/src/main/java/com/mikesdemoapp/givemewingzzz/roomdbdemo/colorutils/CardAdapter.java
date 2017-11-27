@@ -23,6 +23,8 @@ import java.util.List;
 
 public class CardAdapter extends BaseAdapter {
 
+    String testC;
+
     List<Integer> colorShadeList;
     Context context;
     LayoutInflater inflater;
