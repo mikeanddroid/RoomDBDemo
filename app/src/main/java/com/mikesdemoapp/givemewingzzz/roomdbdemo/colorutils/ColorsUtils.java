@@ -149,11 +149,22 @@ public class ColorsUtils {
 
     /*****************************************************************************************/
 
-    public List<Integer> getColorBands(ColorModel colorsGen, int bands) {
+    public List<Integer> getDarkColorBands(ColorModel colorsGen, int bands) {
 
         List<Integer> colorBands = new ArrayList<>(bands);
         for (int index = 0; index < bands; index++) {
             colorBands.add(darken(colorsGen, (double) index / (double) bands));
+        }
+
+        return colorBands;
+
+    }
+
+    public List<Integer> getLightColorBands(ColorModel colorsGen, int bands) {
+
+        List<Integer> colorBands = new ArrayList<>(bands);
+        for (int index = 0; index < bands; index++) {
+            colorBands.add(lighten(colorsGen, (double) index / (double) bands));
         }
 
         return colorBands;
@@ -181,6 +192,15 @@ public class ColorsUtils {
 
         return Color.argb(255, red, green, blue);
 
+    }
+
+    public int lighten(ColorModel colorModel, double fraction) {
+
+        int red = (int) Math.round(Math.max(0, colorModel.getR() + 255* fraction));
+        int green = (int) Math.round(Math.max(0, colorModel.getG() + 255 * fraction));
+        int blue = (int) Math.round(Math.max(0, colorModel.getB() + 255 * fraction));
+
+        return Color.argb(255, red, green, blue);
     }
 
     /*****************************************************************************************/

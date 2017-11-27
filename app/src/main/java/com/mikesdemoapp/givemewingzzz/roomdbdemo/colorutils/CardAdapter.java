@@ -78,7 +78,7 @@ public class CardAdapter extends BaseAdapter {
 
         holder.cardValue.setTextColor(colorValueNext);
         holder.cardValue.setText("COLOR VALUE");
-        holder.cardColorValue.setText("" + colorValue + "\n\nR [ " + rgb.getR() + " ] " + "\nG [ " + rgb.getG() + " ] " + "\nB [ " + rgb.getB() + " ] ");
+        holder.cardColorValue.setText("" + colorValue + "\n\n   R  [ " + rgb.getR() + "  ] " + "\n   G  [ " + rgb.getG() + "  ] " + "\n   B  [ " + rgb.getB() + "  ] ");
         holder.cardImage.setBackgroundColor(colorValue);
 
         return view;

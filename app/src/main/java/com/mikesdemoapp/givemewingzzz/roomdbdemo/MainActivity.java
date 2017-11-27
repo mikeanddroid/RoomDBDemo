@@ -2,7 +2,9 @@ package com.mikesdemoapp.givemewingzzz.roomdbdemo;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.StackView;
@@ -22,7 +26,6 @@ import android.widget.Toast;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.CardAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsShadesTask;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsTask;
-import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsUtils;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.DialogRecyclerViewAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.FileLog;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.RecyclerViewAdapter;
@@ -31,6 +34,9 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static android.view.View.GONE;
+import static com.mikesdemoapp.givemewingzzz.roomdbdemo.R.id.textView;
 
 public class MainActivity extends AppCompatActivity implements ColorsTask.ColorsResult, RecyclerViewAdapter.ItemListener, ColorsShadesTask.ColorsShadesResult, DialogRecyclerViewAdapter.DialogItemListener {
 
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -252,6 +259,8 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
     }
 
+    public int shouldAnimateCounter = 0;
+
     @Override
     public void onColorShadesPostExecute(List<Integer> colorShadesList) {
 
@@ -269,16 +278,44 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         alertDialog.setCustomTitle(customTitleView);
 
+        final Animation colorAnimation = new ScaleAnimation(
+                0f, 1f, // Start and end values for the X axis scaling
+                0, 1, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+        colorAnimation.setFillAfter(true); // Needed to keep the result of the animation
+
+        final Animation colorValueAnimation = new ScaleAnimation(
+                0f, 1f, // Start and end values for the X axis scaling
+                0, 1, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+        colorValueAnimation.setFillAfter(true); // Needed to keep the result of the animation
+
         final TextView titleView = (TextView) customTitleView.findViewById(R.id.stackShadeTitleTextView);
 
-        final TextView colorValue1 = (TextView) view.findViewById(R.id.textView);
+
+        final TextView shadesHeaderView = (TextView) view.findViewById(R.id.shadesHeader);
+
+        titleView.setText("Color Details");
+        titleView.setTextColor(colorShadesList.get(2));
+
+        shadesHeaderView.setText("COLOR SHADES - " + colorShadesList.size());
+        shadesHeaderView.setTextColor(colorShadesList.get(2));
+
+        // For stack view
+
+        StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
+//        RecyclerView dialogShadesView = (RecyclerView) view.findViewById(R.id.dialogRecyclerView);
+
+        final TextView colorValue1 = (TextView) view.findViewById(textView);
         final TextView colorValue2 = (TextView) view.findViewById(R.id.textView1);
         final TextView colorValue3 = (TextView) view.findViewById(R.id.textView2);
         final TextView colorValue4 = (TextView) view.findViewById(R.id.textView3);
         final TextView colorValue5 = (TextView) view.findViewById(R.id.textView4);
         final TextView colorValue6 = (TextView) view.findViewById(R.id.textView5);
 
-        List<TextView> textViews = new ArrayList<>();
+        final List<TextView> textViews = new ArrayList<>();
         textViews.add(colorValue1);
         textViews.add(colorValue2);
         textViews.add(colorValue3);
@@ -307,30 +344,16 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
             colorValue6.setText("" + colorShadesList.get(5));
         }
 
-        colorValue1.setTextColor(defColor);
-        colorValue2.setTextColor(defColor);
-        colorValue3.setTextColor(defColor);
-        colorValue4.setTextColor(defColor);
-        colorValue5.setTextColor(defColor);
-        colorValue6.setTextColor(defColor);
+        for (TextView textView : textViews) {
+            textView.setTextColor(defColor);
+            if (textView.getVisibility() == View.VISIBLE) {
+                textView.setVisibility(GONE);
+            }
 
-        ColorsUtils colorsUtils = new ColorsUtils();
-        colorsUtils.fadeViews(textViews);
+        }
 
-        final TextView shadesHeaderView = (TextView) view.findViewById(R.id.shadesHeader);
-
-        titleView.setText("Color Details");
-        titleView.setTextColor(colorShadesList.get(2));
-
-        shadesHeaderView.setText("COLOR SHADES - " + colorShadesList.size());
-        shadesHeaderView.setTextColor(colorShadesList.get(2));
-
-        // For stack view
-
-        StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
-//        RecyclerView dialogShadesView = (RecyclerView) view.findViewById(R.id.dialogRecyclerView);
-
-//        Bitmap bitmap = ColorsUtils.getRoundedCornerBitmap();
+        colorValueAnimation.setDuration(300);
+        textViews.get(0).startAnimation(colorValueAnimation);
 
         CircularImageView imageButton = view.findViewById(R.id.imageButtonMain);
         imageButton.setBackgroundColor(colorShadesList.get(0));
@@ -345,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         CircularImageView imageButton5 = view.findViewById(R.id.imageButton5);
         imageButton5.setBackgroundColor(colorShadesList.get(5));
 
-        List<CircularImageView> imageButtons = new ArrayList<>();
+        final List<CircularImageView> imageButtons = new ArrayList<>();
         imageButtons.add(imageButton);
         imageButtons.add(imageButton1);
         imageButtons.add(imageButton2);
@@ -353,7 +376,113 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         imageButtons.add(imageButton4);
         imageButtons.add(imageButton5);
 
-        colorsUtils.scaleImageViews(imageButtons, 0, 1);
+        for (CircularImageView circularImageView : imageButtons) {
+
+            if (circularImageView.getVisibility() == View.VISIBLE) {
+                circularImageView.setVisibility(GONE);
+            }
+
+        }
+
+        // Scale image buttons
+//        colorsUtils.scaleImageViews(imageButtons, 0, 1);
+
+        colorAnimation.setDuration(200);
+        imageButtons.get(0).startAnimation(colorAnimation); // First Image
+
+        colorAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                for (int i = 0; i < imageButtons.size(); i++) {
+                    if (imageButtons.get(i).getVisibility() == GONE) {
+
+                        final Animation colorAnimation = new ScaleAnimation(
+                                0f, 1f, // Start and end values for the X axis scaling
+                                0, 1, // Start and end values for the Y axis scaling
+                                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+                        colorAnimation.setFillAfter(true);
+
+                        int factor = (int) Math.round((i + 1) * 1.1);
+                        int handlerFactor = (int) Math.round((i + 0.5) * 1.1);
+                        int handlerFactorDuration = 200 + (i * (200 / handlerFactor));
+
+                        System.out.println("factor = " + factor);
+
+                        colorAnimation.setDuration(200 + (i * (200 / factor)));
+
+                        final int finalI = i;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                imageButtons.get(finalI).startAnimation(colorAnimation);
+                                imageButtons.get(finalI).setVisibility(View.VISIBLE);
+                            }
+                        }, handlerFactorDuration);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        colorValueAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                for (int i = 0; i < textViews.size(); i++) {
+                    if (textViews.get(i).getVisibility() == GONE) {
+
+                        final Animation colorValueAnimation = new ScaleAnimation(
+                                0f, 1f, // Start and end values for the X axis scaling
+                                0, 1, // Start and end values for the Y axis scaling
+                                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+                        colorValueAnimation.setFillAfter(true);
+
+                        int factor = (int) Math.round((i + 1) * 1.1);
+                        int handlerFactor = (int) Math.round((i + 0.5) * 1.1);
+                        int handlerFactorDuration = 200 + (i * (200 / handlerFactor));
+
+                        System.out.println("factor = " + factor);
+
+                        colorValueAnimation.setDuration(200 + (i * (200 / factor))); // factor from 0.0 - 0.5
+
+                        final int finalI = i;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViews.get(finalI).startAnimation(colorValueAnimation);
+                                textViews.get(finalI).setVisibility(View.VISIBLE);
+                            }
+                        }, handlerFactorDuration);
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         stackView.setAdapter(cardAdapter);
 
@@ -368,6 +497,63 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         dialog.show();
 
         progressDialog.dismiss();
+    }
+
+    private static boolean shouldExec = false;
+
+    public class AnimationTask extends AsyncTask<List<CircularImageView>, Integer, Boolean> {
+
+        public AnimationTask(boolean shouldExecute) {
+            shouldExec = shouldExecute;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<CircularImageView>... params) {
+
+            List<CircularImageView> circularImageViews = params[0];
+
+            for (final CircularImageView circularImageView : circularImageViews) {
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (circularImageView.getVisibility() != View.VISIBLE) {
+
+                            Animation anim = new ScaleAnimation(
+                                    0f, 1f, // Start and end values for the X axis scaling
+                                    0, 1, // Start and end values for the Y axis scaling
+                                    Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                                    Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+                            anim.setFillAfter(true); // Needed to keep the result of the animation
+                            anim.setDuration(1500);
+
+                            circularImageView.startAnimation(anim);
+                            circularImageView.setVisibility(View.VISIBLE);
+
+                            shouldExec = true;
+
+                        } else {
+                            shouldExec = false;
+                        }
+
+                    }
+                });
+
+            }
+
+            return shouldExec;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+
+            if (b) {
+                new AnimationTask(shouldExec).execute();
+            }
+
+        }
     }
 
 }

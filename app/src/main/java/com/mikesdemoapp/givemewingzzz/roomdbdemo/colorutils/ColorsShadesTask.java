@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.RoomDbDemoApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,11 +42,25 @@ public class ColorsShadesTask extends AsyncTask<Long, Integer, List<Integer>> {
 
         ColorModel colorModel = colorsUtils.getRGBFromHex(colorValueParams[0]);
 
-        List<Integer> colorsShadesList = colorsUtils.getColorBands(colorModel, desiredShades);
+        List<Integer> colorBandsList = new ArrayList<>();
 
-        fileLog.d(TAG, " Color Shades List Size --> " + colorsShadesList.size());
+        List<Integer> colorsShadesLightBandList = colorsUtils.getLightColorBands(colorModel, desiredShades);
+        List<Integer> colorsShadesDarkBandList = colorsUtils.getDarkColorBands(colorModel, desiredShades);
 
-        return colorsShadesList;
+//        colorBandsList.addAll(colorsShadesLightBandList);
+        colorBandsList.addAll(colorsShadesDarkBandList);
+
+//        for (int i = 0; i < colorsShadesLightBandList.size() - 1; i++) {
+//
+//            if () {
+//
+//            }
+//
+//        }
+
+        fileLog.d(TAG, " Color Shades List Size --> " + colorBandsList.size());
+
+        return colorBandsList;
     }
 
     @Override
