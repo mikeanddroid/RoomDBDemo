@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.R;
@@ -66,6 +67,7 @@ public class CardAdapter extends BaseAdapter {
             holder.cardImage = (ImageView) view.findViewById(R.id.stackShadeView);
             holder.cardValue = (TextView) view.findViewById(R.id.stackShadeTextView);
             holder.cardColorValue = (TextView) view.findViewById(R.id.stackShadeValueTextView);
+            holder.cardContainer = (RelativeLayout) view.findViewById(R.id.dialogColorContainerRelativeLayout);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -91,6 +93,7 @@ public class CardAdapter extends BaseAdapter {
         ImageView cardImage;
         TextView cardValue;
         TextView cardColorValue;
+        RelativeLayout cardContainer;
     }
 
 }

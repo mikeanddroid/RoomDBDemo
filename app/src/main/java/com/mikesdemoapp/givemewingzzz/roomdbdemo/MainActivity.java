@@ -2,6 +2,7 @@ package com.mikesdemoapp.givemewingzzz.roomdbdemo;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.StackView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.CardAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsShadesTask;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsTask;
+import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.ColorsUtils;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.DialogRecyclerViewAdapter;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.FileLog;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.RecyclerViewAdapter;
@@ -163,22 +167,25 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         alertDialog.setView(view);
 
-        ImageView mainColorImage = view.findViewById(R.id.imageShadeView);
+        final ImageView mainColorImage = view.findViewById(R.id.imageShadeView);
         final ImageView imageColor2 = view.findViewById(R.id.imageShadeView2);
         final ImageView imageColor4 = view.findViewById(R.id.imageShadeView4);
 
+        final RelativeLayout mainImageCard = view.findViewById(R.id.imageShadeViewCard);
+        final CardView mainImageCard2 = view.findViewById(R.id.imageShadeView2Card);
+        final CardView mainImageCard4 = view.findViewById(R.id.imageShadeView4Card);
+
         final TextView errorText1 = view.findViewById(R.id.stackShadesErrorTextView);
         final TextView errorText2 = view.findViewById(R.id.stackShadesError2TextView);
-
-        mainColorImage.bringToFront();
-        mainColorImage.setBackgroundColor(item);
+        final TextView colorValueTV = customTitleView.findViewById(R.id.colorValueDialogTextView);
 
         alertDialog.setCustomTitle(customTitleView);
 
         final TextView titleView = (TextView) customTitleView.findViewById(R.id.stackShadeTitleTextView);
 
 //        alertDialog.setTitle("Color Details");
-        alertDialog.setMessage("Color : " + item);
+//        alertDialog.setMessage("Color : " + item);
+
 
         alertDialog.setPositiveButton("Find More Shades", new DialogInterface.OnClickListener() {
             @Override
@@ -216,11 +223,33 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
                 int BLACK_RANGE_TEMP = -16777216;
 
+                int color0 = colorShadesList.get(0);
                 int color1 = colorShadesList.get(1);
                 int color2 = colorShadesList.get(2);
 
                 titleView.setText("Color Details");
                 titleView.setTextColor(colorShadesList.get(2));
+
+                int[] alphaColor = ColorsUtils.getRGB(color1);
+
+                int alphaValColor = Color.argb(255, alphaColor[0], alphaColor[1], alphaColor[2]);
+
+                colorValueTV.setText("COLOR " + item);
+
+                errorText2.bringToFront();
+                errorText1.bringToFront();
+
+                errorText2.setTextColor(Color.parseColor("#ffffff"));
+                errorText1.setTextColor(Color.parseColor("#ffffff"));
+
+                errorText1.setVisibility(View.VISIBLE);
+                errorText2.setVisibility(View.VISIBLE);
+                mainImageCard2.bringToFront();
+                mainImageCard2.setBackgroundColor(color1);
+
+//                mainImageCard.bringToFront();
+                mainImageCard.setBackgroundColor(alphaValColor);
+                mainColorImage.setBackgroundColor(color1);
 
                 // Set Left and right images
 
@@ -229,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                     errorText1.setText("NO\nMORE\nSHADE\nFOUND");
                     errorText1.setVisibility(View.VISIBLE);
                 } else {
-                    imageColor2.setBackgroundColor(color1);
+                    imageColor2.setBackgroundColor(color0);
                 }
 
                 if (color2 == BLACK_RANGE_TEMP) {
@@ -238,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                     errorText2.setVisibility(View.VISIBLE);
                 } else {
                     imageColor4.setBackgroundColor(color2);
+                    mainImageCard4.setBackgroundColor(color2);
                 }
             }
         }, 6);
@@ -272,10 +302,15 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         View view = getLayoutInflater().inflate(R.layout.shades_layout_stack_view, null);
+
         final View customTitleView = getLayoutInflater().inflate(R.layout.custom_title_view, null);
+        final TextView colorValueTV = customTitleView.findViewById(R.id.colorValueDialogTextView);
 
         alertDialog.setView(view);
 
+        int[] rgb = ColorsUtils.getRGB(colorShadesList.get(0));
+
+        colorValueTV.setText("COLOR VALUE  " + colorShadesList.get(0) + " ( " + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + " ) ");
         alertDialog.setCustomTitle(customTitleView);
 
         final Animation colorAnimation = new ScaleAnimation(
@@ -306,6 +341,12 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         // For stack view
 
         StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
+
+        stackView.setInAnimation(this, android.R.animator.fade_in);
+        stackView.setOutAnimation(this, android.R.animator.fade_out);
+
+//        stackView.onGenericMotionEvent();
+
 //        RecyclerView dialogShadesView = (RecyclerView) view.findViewById(R.id.dialogRecyclerView);
 
         final TextView colorValue1 = (TextView) view.findViewById(textView);

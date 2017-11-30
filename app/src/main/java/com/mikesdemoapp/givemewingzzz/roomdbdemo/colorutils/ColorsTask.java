@@ -107,6 +107,9 @@ public class ColorsTask extends AsyncTask<Object, Object, Map<Long, Integer>> {
         Collections.sort(mapValues);
         Collections.sort(mapKeys);
 
+        Collections.reverse(mapValues);
+        Collections.reverse(mapKeys);
+
         LinkedHashMap<Long, Integer> sortedMap =
                 new LinkedHashMap<>();
 
