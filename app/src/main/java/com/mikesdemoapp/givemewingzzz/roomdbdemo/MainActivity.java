@@ -70,10 +70,6 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         fileLog = RoomDbDemoApp.get().getFileLog();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Loading colors..");
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,12 +119,22 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
     @Override
     public void onPreExecute() {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Loading colors");
+        progressDialog.setMessage("Generating Random colors..");
+
         progressDialog.show();
     }
 
     @Override
     public void onProgressUpdate(Integer... values) {
+
         progressDialog.setProgress(values[0]);
+        progressDialog.setSecondaryProgress(values[0]);
+
     }
 
     @Override
@@ -270,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                     mainImageCard4.setBackgroundColor(color2);
                 }
             }
-        }, 6);
+        }, 12);
 
         colorsShadesTask.execute(Long.valueOf(item));
 
@@ -296,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         fileLog.d(TAG, "Colors Shades Size In Main --> " + colorShadesList.size());
 
-        CardAdapter cardAdapter = new CardAdapter(this, colorShadesList);
+        final CardAdapter cardAdapter = new CardAdapter(this, colorShadesList);
         DialogRecyclerViewAdapter dialogRecyclerViewAdapter = new DialogRecyclerViewAdapter(this, colorShadesList, this);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -340,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         // For stack view
 
-        StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
+        final StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
 
         stackView.setInAnimation(this, android.R.animator.fade_in);
         stackView.setOutAnimation(this, android.R.animator.fade_out);
@@ -393,10 +399,10 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         }
 
-        colorValueAnimation.setDuration(300);
+        colorValueAnimation.setDuration(250);
         textViews.get(0).startAnimation(colorValueAnimation);
 
-        CircularImageView imageButton = view.findViewById(R.id.imageButtonMain);
+        final CircularImageView imageButton = view.findViewById(R.id.imageButtonMain);
         imageButton.setBackgroundColor(colorShadesList.get(0));
         CircularImageView imageButton1 = view.findViewById(R.id.imageButton1);
         imageButton1.setBackgroundColor(colorShadesList.get(1));
@@ -425,10 +431,67 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         }
 
+        for (int i = 0; i < textViews.size(); i++) {
+
+            final int finalI = i;
+
+            imageButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    int stackItemPosition = 0;
+
+                    // Todo : Switch stack view based on the item tapped from other view
+//                    switch (view.getId()) {
+//
+//                        case R.id.imageButtonMain:
+//                            stackItemPosition = 0;
+//                            break;
+//                        case R.id.imageButton1:
+//                            stackItemPosition = 1;
+//                            break;
+//                        case R.id.imageButton2:
+//                            stackItemPosition = 2;
+//                            break;
+//                        case R.id.imageButton3:
+//                            stackItemPosition = 3;
+//                            break;
+//                        case R.id.imageButton4:
+//                            stackItemPosition = 4;
+//                            break;
+//                        case R.id.imageButton5:
+//                            stackItemPosition = 5;
+//                            break;
+//
+//                    }
+//
+//                    if (stackItemPosition> clicked view){
+//
+//                        int result = cure pos - click view pos;
+//
+//                        if (result <= -1) {
+//                            return;
+//                        }
+//
+//                        for (int i = 0; i < result; i++) {
+//                            stackView.showNext();
+//                        }
+//
+//                    }
+//
+//                    for (int i = 0; i < stackItemPosition; i++) {
+//                        stackView.showNext();
+//                    }
+
+                }
+            });
+
+        }
+
         // Scale image buttons
 //        colorsUtils.scaleImageViews(imageButtons, 0, 1);
 
-        colorAnimation.setDuration(200);
+        colorAnimation.setDuration(250);
         imageButtons.get(0).startAnimation(colorAnimation); // First Image
 
         colorAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -451,12 +514,12 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                         colorAnimation.setFillAfter(true);
 
                         int factor = (int) Math.round((i + 1) * 1.1);
-                        int handlerFactor = (int) Math.round((i + 0.5) * 1.1);
-                        int handlerFactorDuration = 200 + (i * (200 / handlerFactor));
+                        int handlerFactor = (int) Math.round((i + 0.5) * 1.5);
+                        int handlerFactorDuration = 250 + (i * (250 / handlerFactor));
 
                         System.out.println("factor = " + factor);
 
-                        colorAnimation.setDuration(200 + (i * (200 / factor)));
+                        colorAnimation.setDuration(250 + (i * (250 / factor)));
 
                         final int finalI = i;
                         new Handler().postDelayed(new Runnable() {
@@ -498,12 +561,12 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                         colorValueAnimation.setFillAfter(true);
 
                         int factor = (int) Math.round((i + 1) * 1.1);
-                        int handlerFactor = (int) Math.round((i + 0.5) * 1.1);
-                        int handlerFactorDuration = 200 + (i * (200 / handlerFactor));
+                        int handlerFactor = (int) Math.round((i + 0.5) * 1.2);
+                        int handlerFactorDuration = 250 + (i * (250 / handlerFactor));
 
                         System.out.println("factor = " + factor);
 
-                        colorValueAnimation.setDuration(200 + (i * (200 / factor))); // factor from 0.0 - 0.5
+                        colorValueAnimation.setDuration(250 + (i * (250 / factor))); // factor from 0.0 - 0.5
 
                         final int finalI = i;
                         new Handler().postDelayed(new Runnable() {

@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by GiveMeWingzzz on 11/23/2017.
  */
 
-public class ColorsTask extends AsyncTask<Object, Object, Map<Long, Integer>> {
+public class ColorsTask extends AsyncTask<Object, Integer, Map<Long, Integer>> {
 
     private static final String TAG = ColorsTask.class.getSimpleName();
 
@@ -51,10 +51,44 @@ public class ColorsTask extends AsyncTask<Object, Object, Map<Long, Integer>> {
     @Override
     protected Map<Long, Integer> doInBackground(Object... rgbValue) {
 
+//        publishProgress(0);
+
         Map<Long, ColorModel> colorsModelMap = getRGBColorMap();
-        Map<Long, Integer> colorsIntMap = getRandomColorsMap();
+
+        Map<Long, Integer> colorsIntMap = new HashMap<>();
+
+        int randomColorGenCount = 2000;
+
+        for (int i = 0; i < randomColorGenCount; i++) {
+
+            int randomColor = buildRandomColor();
+
+            publishProgress((int) ((i / (float) randomColorGenCount) * 100));
+
+            colorList.add(randomColor);
+
+            Long key = Long.valueOf(String.valueOf(i));
+
+            fileLog.v(TAG, "Color Key = " + key + " Value : [ " + randomColor + " ] ");
+
+            colorsIntMap.put(key, randomColor);
+
+        }
 
         fileLog.v(TAG, "Colors Map Size --> " + colorsIntMap.size());
+
+//        long totalSize = 0;
+//
+//        for (int i = 0; i < 10; i++) {
+//
+////            totalSize += getRandomColorsMap().size();
+//
+//            publishProgress((int) ((i / (float) 10) * 100));
+//
+//            // Escape early if cancel() is called
+//            if (isCancelled()) break;
+//
+//        }
 
         return colorsIntMap;
     }
@@ -65,11 +99,11 @@ public class ColorsTask extends AsyncTask<Object, Object, Map<Long, Integer>> {
         colorsResult.onPreExecute();
     }
 
-
     @Override
-    protected void onProgressUpdate(Object... values) {
+    protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        colorsResult.onProgressUpdate();
+        System.out.println("Objects Progress -- " + values);
+        colorsResult.onProgressUpdate(values);
     }
 
     @Override
