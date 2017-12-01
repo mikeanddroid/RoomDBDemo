@@ -1,6 +1,7 @@
 package com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -74,7 +75,13 @@ public class CardAdapter extends BaseAdapter {
         }
 
         int colorValue = getItem(position);
-        int colorValueNext = getItem(2);
+        int colorValueNext;
+
+        if (getCount() > 2) {
+            colorValueNext = getItem(2);
+        } else {
+            colorValueNext = Color.DKGRAY;
+        }
 
         fileLog.d(TAG, " getView : " + " colorValue = " + colorValue);
 
@@ -82,6 +89,7 @@ public class CardAdapter extends BaseAdapter {
 
         holder.cardValue.setTextColor(colorValueNext);
         holder.cardValue.setText("COLOR VALUE");
+        holder.cardColorValue.setTextColor(Color.WHITE);
         holder.cardColorValue.setText("" + colorValue + "\n\n   R  [ " + rgb.getR() + "  ] " + "\n   G  [ " + rgb.getG() + "  ] " + "\n   B  [ " + rgb.getB() + "  ] ");
         holder.cardImage.setBackgroundColor(colorValue);
 

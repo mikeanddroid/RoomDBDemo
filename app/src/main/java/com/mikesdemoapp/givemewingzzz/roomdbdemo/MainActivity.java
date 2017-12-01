@@ -177,9 +177,10 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         final ImageView imageColor2 = view.findViewById(R.id.imageShadeView2);
         final ImageView imageColor4 = view.findViewById(R.id.imageShadeView4);
 
-        final RelativeLayout mainImageCard = view.findViewById(R.id.imageShadeViewCard);
+        final RelativeLayout mainImageRelativeCard = view.findViewById(R.id.imageShadeViewCard);
         final CardView mainImageCard2 = view.findViewById(R.id.imageShadeView2Card);
         final CardView mainImageCard4 = view.findViewById(R.id.imageShadeView4Card);
+        final CardView mainImageCardView = view.findViewById(R.id.imageShadeMainCard);
 
         final TextView errorText1 = view.findViewById(R.id.stackShadesErrorTextView);
         final TextView errorText2 = view.findViewById(R.id.stackShadesError2TextView);
@@ -254,8 +255,9 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                 mainImageCard2.setBackgroundColor(color1);
 
 //                mainImageCard.bringToFront();
-                mainImageCard.setBackgroundColor(alphaValColor);
+                mainImageRelativeCard.setBackgroundColor(alphaValColor);
                 mainColorImage.setBackgroundColor(color1);
+                mainImageCardView.setBackgroundColor(color2);
 
                 // Set Left and right images
 

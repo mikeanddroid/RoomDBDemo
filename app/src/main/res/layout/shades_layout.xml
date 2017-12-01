@@ -10,9 +10,9 @@
     <android.support.v7.widget.CardView
         android:id="@+id/imageShadeView4Card"
         android:layout_width="wrap_content"
-        android:layout_height="120dp"
-        android:layout_gravity="center_vertical|center"
-        android:layout_marginEnd="75dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_vertical|center|start"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="@dimen/margin8dp"
         android:background="@drawable/rectangle_shape_outline"
         app:layout_constraintBottom_toBottomOf="@+id/imageShadeViewCard"
@@ -23,9 +23,11 @@
         <ImageView
             android:id="@+id/imageShadeView4"
             android:layout_width="@dimen/margin_100dp"
-            android:layout_height="@dimen/margin_100dp"
+            android:layout_height="130dp"
             android:layout_marginBottom="@dimen/margin_2dp"
             android:elevation="18dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cross_shaped_pattern"
             android:visibility="visible" />
 
         <TextView
@@ -64,9 +66,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.CardView
-            android:layout_width="150dp"
+            android:layout_width="118dp"
             android:layout_height="170dp"
             android:layout_gravity="center"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -78,7 +81,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/rectangle_shape_outline">
+                android:background="@drawable/cross_shaped_pattern">
 
                 <TextView
                     android:id="@+id/stackShadesErrorMainTextView"
@@ -90,7 +93,7 @@
                     android:background="@drawable/rectangle_shape_outline"
                     android:padding="4dp"
                     android:scaleType="fitCenter"
-                    android:text="B"
+                    android:text=""
                     android:textColor="@color/grey_9"
                     android:textSize="36sp"
                     android:textStyle="bold"
@@ -105,26 +108,25 @@
 
 
         <android.support.v7.widget.CardView
-            android:layout_width="100dp"
+            android:id="@+id/imageShadeMainCard"
+            android:layout_width="110dp"
             android:layout_height="190dp"
             android:layout_gravity="center"
-            android:elevation="18dp">
+            android:layout_marginEnd="10dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center|top"
                 android:elevation="18dp">
 
                 <ImageView
                     android:id="@+id/imageShadeView"
-                    android:layout_width="100dp"
-                    android:layout_height="165dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/rectangle_shape_outline"
-                    android:padding="4dp"
-                    android:scaleType="fitCenter"
+                    android:layout_width="120dp"
+                    android:layout_height="170dp"
+                    android:elevation="18dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/cross_shaped_pattern"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -136,15 +138,11 @@
     <android.support.v7.widget.CardView
         android:id="@+id/imageShadeView2Card"
         android:layout_width="wrap_content"
-        android:layout_height="160dp"
-        android:layout_gravity="center_horizontal|center"
-        android:layout_marginStart="85dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center_horizontal|end|center"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="25dp"
-        android:background="@drawable/rectangle_shape_outline"
-        app:layout_constraintBottom_toBottomOf="@+id/imageShadeViewCard"
-        app:layout_constraintLeft_toLeftOf="@+id/imageShadeViewCard"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageShadeViewCard">
+        android:background="@drawable/rectangle_shape_outline">
 
         <TextView
             android:id="@+id/stackShadesError2TextView"
@@ -155,7 +153,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:padding="2dp"
-            android:text="A"
+            android:text=""
             android:textColor="@color/grey_9"
             android:textSize="36sp"
             android:textStyle="bold"
@@ -164,9 +162,11 @@
         <ImageView
             android:id="@+id/imageShadeView2"
             android:layout_width="120dp"
-            android:layout_height="140dp"
+            android:layout_height="150dp"
             android:layout_marginBottom="@dimen/margin_2dp"
             android:elevation="18dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cross_shaped_pattern"
             android:visibility="visible" />
 
     </android.support.v7.widget.CardView>
