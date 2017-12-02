@@ -3,6 +3,7 @@ package com.mikesdemoapp.givemewingzzz.roomdbdemo;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +22,6 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.StackView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +33,7 @@ import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.DialogRecyclerViewAd
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.FileLog;
 import com.mikesdemoapp.givemewingzzz.roomdbdemo.colorutils.RecyclerViewAdapter;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.yuyakaido.android.cardstackview.CardStackView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.Map;
 import static android.view.View.GONE;
 import static com.mikesdemoapp.givemewingzzz.roomdbdemo.R.id.textView;
 
-public class MainActivity extends AppCompatActivity implements ColorsTask.ColorsResult, RecyclerViewAdapter.ItemListener, ColorsShadesTask.ColorsShadesResult, DialogRecyclerViewAdapter.DialogItemListener {
+public class MainActivity extends AppCompatActivity implements ColorsTask.ColorsResult, RecyclerViewAdapter.ItemListener, ColorsShadesTask.ColorsShadesResult, DialogRecyclerViewAdapter.DialogItemListener, CardAdapter.CardStackListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         final ImageView imageColor2 = view.findViewById(R.id.imageShadeView2);
         final ImageView imageColor4 = view.findViewById(R.id.imageShadeView4);
 
-        final RelativeLayout mainImageRelativeCard = view.findViewById(R.id.imageShadeViewCard);
         final CardView mainImageCard2 = view.findViewById(R.id.imageShadeView2Card);
         final CardView mainImageCard4 = view.findViewById(R.id.imageShadeView4Card);
         final CardView mainImageCardView = view.findViewById(R.id.imageShadeMainCard);
@@ -198,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                colorsShadesTask = new ColorsShadesTask(MainActivity.this, 6);
+                colorsShadesTask = new ColorsShadesTask(MainActivity.this, 8);
                 colorsShadesTask.execute(Long.valueOf(item));
 
                 dialogInterface.dismiss();
@@ -234,6 +233,20 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                 int color1 = colorShadesList.get(1);
                 int color2 = colorShadesList.get(2);
 
+                //Color.parseColor() method allow us to convert
+                // a hexadecimal color string to an integer value (int color)
+                int[] colors = {color1, color0, color0, color0, color1};
+
+                //create a new gradient color
+                GradientDrawable gd = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT, colors);
+                gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+                gd.setCornerRadius(10f);
+                gd.setShape(GradientDrawable.RECTANGLE);
+
+                // Set 3 pixels width solid blue color border
+                gd.setStroke(2, color0);
+
                 titleView.setText("Color Details");
                 titleView.setTextColor(colorShadesList.get(2));
 
@@ -241,41 +254,45 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
                 int alphaValColor = Color.argb(255, alphaColor[0], alphaColor[1], alphaColor[2]);
 
-                colorValueTV.setText("COLOR " + item);
+                int[] rgb = ColorsUtils.getRGB(item);
+                String colorDetails = item + " ( " + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + " ) ";
 
-                errorText2.bringToFront();
-                errorText1.bringToFront();
+                colorValueTV.setText("COLOR " + colorDetails);
 
-                errorText2.setTextColor(Color.parseColor("#ffffff"));
-                errorText1.setTextColor(Color.parseColor("#ffffff"));
 
-                errorText1.setVisibility(View.VISIBLE);
-                errorText2.setVisibility(View.VISIBLE);
-                mainImageCard2.bringToFront();
-                mainImageCard2.setBackgroundColor(color1);
+//                mainImageCard2.bringToFront();
+                mainImageCard2.setBackground(gd);
 
-//                mainImageCard.bringToFront();
-                mainImageRelativeCard.setBackgroundColor(alphaValColor);
+                mainImageCardView.bringToFront();
                 mainColorImage.setBackgroundColor(color1);
-                mainImageCardView.setBackgroundColor(color2);
+                mainImageCardView.setBackground(gd);
 
                 // Set Left and right images
 
                 if (color1 == BLACK_RANGE_TEMP) {
+
                     imageColor2.setBackground(getDrawable(R.drawable.rectangle_shape_outline));
+
+                    errorText1.setTextColor(Color.parseColor("#ffffff"));
                     errorText1.setText("NO\nMORE\nSHADE\nFOUND");
+                    errorText1.bringToFront();
                     errorText1.setVisibility(View.VISIBLE);
                 } else {
                     imageColor2.setBackgroundColor(color0);
                 }
 
                 if (color2 == BLACK_RANGE_TEMP) {
+
                     imageColor4.setBackground(getDrawable(R.drawable.rectangle_shape_outline));
+
+                    errorText2.setTextColor(Color.parseColor("#ffffff"));
                     errorText2.setText("NO\nMORE\nSHADE\nFOUND");
+                    errorText2.bringToFront();
                     errorText2.setVisibility(View.VISIBLE);
+
                 } else {
                     imageColor4.setBackgroundColor(color2);
-                    mainImageCard4.setBackgroundColor(color2);
+                    mainImageCard4.setBackground(gd);
                 }
             }
         }, 12);
@@ -304,7 +321,52 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         fileLog.d(TAG, "Colors Shades Size In Main --> " + colorShadesList.size());
 
+        int color0 = colorShadesList.get(0);
+        int color1 = colorShadesList.get(1);
+        int color2 = colorShadesList.get(2);
+        int color3 = colorShadesList.get(3);
+        int color4 = colorShadesList.get(4);
+
+        int lastColorPosition = colorShadesList.size() - 1;
+        int secondLastColorPosition = 0;
+        int thirdLastColorPosition = 0;
+
+        if (colorShadesList.size() > lastColorPosition) {
+            secondLastColorPosition = lastColorPosition - 1;
+        }
+
+        if (colorShadesList.size() > secondLastColorPosition) {
+            thirdLastColorPosition = secondLastColorPosition - 1;
+        }
+
+        int lastColor = colorShadesList.get(lastColorPosition);
+        int secondLastColor = colorShadesList.get(secondLastColorPosition);
+
+
+        int[] mainRGB = ColorsUtils.getRGB(colorShadesList.get(3));
+
+        String hex = String.format("#77%02x%02x%02x", mainRGB[0], mainRGB[1], mainRGB[2]);
+
+        System.out.println("Hex Value = [" + hex + "]");
+
+        //Color.parseColor() method allow us to convert
+        // a hexadecimal color string to an integer value (int color)
+        int[] colors = {color4, color3, color4};
+
+        //create a new gradient color
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP, colors);
+        gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        gd.setCornerRadius(2f);
+//        gd.setColorFilter(new PorterDuffColorFilter(color1, PorterDuff.Mode.DARKEN));
+        gd.setShape(GradientDrawable.RECTANGLE);
+
+        // Set 3 pixels width solid blue color border
+//        gd.setStroke(4, color1);
+
         final CardAdapter cardAdapter = new CardAdapter(this, colorShadesList);
+        cardAdapter.setCardStackListener(this);
+
         DialogRecyclerViewAdapter dialogRecyclerViewAdapter = new DialogRecyclerViewAdapter(this, colorShadesList, this);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -318,7 +380,10 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         int[] rgb = ColorsUtils.getRGB(colorShadesList.get(0));
 
-        colorValueTV.setText("COLOR VALUE  " + colorShadesList.get(0) + " ( " + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + " ) ");
+        String colorValue = "COLOR VALUE  " + colorShadesList.get(0) + " ( " + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + " ) ";
+
+        customTitleView.setBackgroundColor(Color.parseColor(hex));
+        colorValueTV.setText(colorValue);
         alertDialog.setCustomTitle(customTitleView);
 
         final Animation colorAnimation = new ScaleAnimation(
@@ -348,10 +413,10 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         // For stack view
 
-        final StackView stackView = (StackView) view.findViewById(R.id.shadesStackView);
+        final CardStackView stackView = (CardStackView) view.findViewById(R.id.shadesStackView);
 
-        stackView.setInAnimation(this, android.R.animator.fade_in);
-        stackView.setOutAnimation(this, android.R.animator.fade_out);
+//        stackView.setInAnimation(this, android.R.animator.fade_in);
+//        stackView.setOutAnimation(this, android.R.animator.fade_out);
 
 //        stackView.onGenericMotionEvent();
 
@@ -372,10 +437,13 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         textViews.add(colorValue5);
         textViews.add(colorValue6);
 
-        int defColor = colorShadesList.get(3);
+        int defColor = colorShadesList.get(4);
 
         colorValue1.setText("" + colorShadesList.get(0));
         colorValue2.setText("" + colorShadesList.get(1));
+
+//        stackView.setBackgroundColor(Color.parseColor(hex));
+//        stackView.setBackground(gd);
 
         if (colorShadesList.get(2) != null) {
             colorValue3.setText("" + colorShadesList.get(2));
@@ -606,6 +674,12 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
     }
 
     private static boolean shouldExec = false;
+
+    @Override
+    public void onPositionChanged(int position) {
+        System.out.println("position = [" + position + "]");
+        Toast.makeText(this, "Position changed --> " + position, Toast.LENGTH_SHORT).show();
+    }
 
     public class AnimationTask extends AsyncTask<List<CircularImageView>, Integer, Boolean> {
 

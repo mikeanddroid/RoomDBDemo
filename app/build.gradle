@@ -41,4 +41,6 @@ dependencies {
 
     compile 'com.mikhaellopez:circularimageview:3.0.2'
 
+    compile "com.yuyakaido.android:card-stack-view:1.0.0-beta8"
+
 }

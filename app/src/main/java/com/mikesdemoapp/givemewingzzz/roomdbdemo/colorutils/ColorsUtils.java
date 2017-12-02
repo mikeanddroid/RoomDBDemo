@@ -43,6 +43,10 @@ public class ColorsUtils {
         return new int[]{r, g, b};
     }
 
+    public static int buildColorWithAlpha(int R, int G, int B, int a) {
+        return Color.argb(a, R, G, B);
+    }
+
     public static int[] getRGB(final String rgb) {
         int r = Integer.parseInt(rgb.substring(0, 2), 16); // 16 for hex
         int g = Integer.parseInt(rgb.substring(2, 4), 16); // 16 for hex
@@ -196,7 +200,7 @@ public class ColorsUtils {
 
     public int lighten(ColorModel colorModel, double fraction) {
 
-        int red = (int) Math.round(Math.max(0, colorModel.getR() + 255* fraction));
+        int red = (int) Math.round(Math.max(0, colorModel.getR() + 255 * fraction));
         int green = (int) Math.round(Math.max(0, colorModel.getG() + 255 * fraction));
         int blue = (int) Math.round(Math.max(0, colorModel.getB() + 255 * fraction));
 

@@ -57,7 +57,7 @@ public class ColorsTask extends AsyncTask<Object, Integer, Map<Long, Integer>> {
 
         Map<Long, Integer> colorsIntMap = new HashMap<>();
 
-        int randomColorGenCount = 2000;
+        int randomColorGenCount = 1000;
 
         for (int i = 0; i < randomColorGenCount; i++) {
 
