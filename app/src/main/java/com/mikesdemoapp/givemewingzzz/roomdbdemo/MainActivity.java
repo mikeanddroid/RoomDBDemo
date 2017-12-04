@@ -3,6 +3,8 @@ package com.mikesdemoapp.givemewingzzz.roomdbdemo;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static android.graphics.Color.parseColor;
 import static android.view.View.GONE;
 import static com.mikesdemoapp.givemewingzzz.roomdbdemo.R.id.textView;
 
@@ -185,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         final TextView errorText2 = view.findViewById(R.id.stackShadesError2TextView);
         final TextView colorValueTV = customTitleView.findViewById(R.id.colorValueDialogTextView);
 
+        colorValueTV.setTextColor(Color.parseColor("#616161"));
+
         alertDialog.setCustomTitle(customTitleView);
 
         final TextView titleView = (TextView) customTitleView.findViewById(R.id.stackShadeTitleTextView);
@@ -233,6 +238,10 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                 int color1 = colorShadesList.get(1);
                 int color2 = colorShadesList.get(2);
 
+                int[] mainRGB = ColorsUtils.getRGB(colorShadesList.get(2));
+
+                String hex = String.format("#77%02x%02x%02x", mainRGB[0], mainRGB[1], mainRGB[2]);
+
                 //Color.parseColor() method allow us to convert
                 // a hexadecimal color string to an integer value (int color)
                 int[] colors = {color1, color0, color0, color0, color1};
@@ -247,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
                 // Set 3 pixels width solid blue color border
                 gd.setStroke(2, color0);
 
+                titleView.setBackgroundColor(parseColor(hex));
                 titleView.setText("Color Details");
                 titleView.setTextColor(colorShadesList.get(2));
 
@@ -273,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
                     imageColor2.setBackground(getDrawable(R.drawable.rectangle_shape_outline));
 
-                    errorText1.setTextColor(Color.parseColor("#ffffff"));
+                    errorText1.setTextColor(parseColor("#ffffff"));
                     errorText1.setText("NO\nMORE\nSHADE\nFOUND");
                     errorText1.bringToFront();
                     errorText1.setVisibility(View.VISIBLE);
@@ -285,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
                     imageColor4.setBackground(getDrawable(R.drawable.rectangle_shape_outline));
 
-                    errorText2.setTextColor(Color.parseColor("#ffffff"));
+                    errorText2.setTextColor(parseColor("#ffffff"));
                     errorText2.setText("NO\nMORE\nSHADE\nFOUND");
                     errorText2.bringToFront();
                     errorText2.setVisibility(View.VISIBLE);
@@ -346,12 +356,26 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         int[] mainRGB = ColorsUtils.getRGB(colorShadesList.get(3));
 
         String hex = String.format("#77%02x%02x%02x", mainRGB[0], mainRGB[1], mainRGB[2]);
+        String hex2 = String.format("#77%02x%02x%02x", mainRGB[0], mainRGB[1], mainRGB[2]);
 
         System.out.println("Hex Value = [" + hex + "]");
 
         //Color.parseColor() method allow us to convert
         // a hexadecimal color string to an integer value (int color)
         int[] colors = {color4, color3, color4};
+
+        int firstParsed = Color.parseColor(hex2);
+
+        // Create new gradient with lighter color than the selected main title bg
+        GradientDrawable lightGD = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP, new int[]{firstParsed, firstParsed, firstParsed});
+
+        lightGD.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        lightGD.setCornerRadius(2f);
+        lightGD.setColorFilter(new PorterDuffColorFilter(color1, PorterDuff.Mode.LIGHTEN));
+        lightGD.setShape(GradientDrawable.RECTANGLE);
+
+        /******/
 
         //create a new gradient color
         GradientDrawable gd = new GradientDrawable(
@@ -375,6 +399,8 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         final View customTitleView = getLayoutInflater().inflate(R.layout.custom_title_view, null);
         final TextView colorValueTV = customTitleView.findViewById(R.id.colorValueDialogTextView);
+        final CardView colorValueTVCard = customTitleView.findViewById(R.id.colorValueDialogTVCard);
+        final CardView colorValueTitleCard = customTitleView.findViewById(R.id.stackShadeTitleTextViewCard);
 
         alertDialog.setView(view);
 
@@ -382,7 +408,9 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
 
         String colorValue = "COLOR VALUE  " + colorShadesList.get(0) + " ( " + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + " ) ";
 
-        customTitleView.setBackgroundColor(Color.parseColor(hex));
+        colorValueTitleCard.setBackgroundColor(color0);
+        customTitleView.setBackground(lightGD);
+        colorValueTVCard.setBackgroundColor(Color.parseColor(hex));
         colorValueTV.setText(colorValue);
         alertDialog.setCustomTitle(customTitleView);
 
@@ -401,12 +429,11 @@ public class MainActivity extends AppCompatActivity implements ColorsTask.Colors
         colorValueAnimation.setFillAfter(true); // Needed to keep the result of the animation
 
         final TextView titleView = (TextView) customTitleView.findViewById(R.id.stackShadeTitleTextView);
-
-
         final TextView shadesHeaderView = (TextView) view.findViewById(R.id.shadesHeader);
 
         titleView.setText("Color Details");
-        titleView.setTextColor(colorShadesList.get(2));
+//        titleView.setTextColor(colorShadesList.get(3));
+        titleView.setTextColor(Color.parseColor("#616161"));
 
         shadesHeaderView.setText("COLOR SHADES - " + colorShadesList.size());
         shadesHeaderView.setTextColor(colorShadesList.get(2));

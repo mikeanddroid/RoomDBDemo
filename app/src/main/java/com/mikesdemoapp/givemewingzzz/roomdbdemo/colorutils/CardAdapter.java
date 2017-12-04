@@ -91,6 +91,10 @@ public class CardAdapter extends BaseAdapter {
         int colorValue = getItem(position);
         int colorValueNext;
 
+        int[] mainRGB = ColorsUtils.getRGB(colorShadeList.get(3));
+
+        String hex = String.format("#77%02x%02x%02x", mainRGB[0], mainRGB[1], mainRGB[2]);
+
         if (getCount() > 2) {
             colorValueNext = getItem(2);
         } else {
@@ -106,7 +110,7 @@ public class CardAdapter extends BaseAdapter {
 
         ColorModel rgb = colorsUtils.getRGBFromHex(Long.valueOf(String.valueOf(colorValue)));
 
-        holder.cardValue.setTextColor(colorValueNext);
+        holder.cardValue.setTextColor(getItem(0));
         holder.cardValue.setText("COLOR VALUE");
         holder.cardColorValue.setTextColor(Color.WHITE);
         holder.cardColorValue.setText(colorDetails);
